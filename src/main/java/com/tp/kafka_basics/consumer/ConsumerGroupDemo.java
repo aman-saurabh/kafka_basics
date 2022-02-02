@@ -31,7 +31,28 @@ public class ConsumerGroupDemo {
             didn't read any message.If you change the groupId to something else then it will read messages from the
             beginning but only once after that for that consumer group also offset will be reset to current message
             and hence in next try it will not read any message.
-            2.) In theory part we have read that
+            2.) In theory part we have read that if our kafka cluster contains multiple brokers then messages published
+            to the topic is distributed in different partitions.For example if our kafka cluster consist of 3 brokers
+            then each topic will have 3 partitions and if we publish 10 messages to such topic then the partition1 may
+            get 4 messages and partition2 and partition3 may get 3 messages each. Here we are considering messages were
+            published without keys. If keys were used then all messages with same key will go to same partition. Now
+            come to the role of consumer group. A consumer group can have multiple consumers. For example - our
+            consumer-group "my-kafka-consumer-group" have two consumers - One in ConsumerDemo file and another in this
+            file.When a consumer group subscribe to a topic, consumers of the consumer group is assigned few particular
+            partitions from where they can read message. Here note that any consumer of the consumer group can be
+            assigned more than one partition, but it is not possible that any partition is assigned to multiple
+            consumers of the same consumer group. So in any case only one consumer of the consumer group have exclusive
+            right to read message from a single partition and no two consumers of a consumer group can read messages
+            from the same partition. So having more consumers in a consumer-group than the number of brokers does not
+            have any benefit. Since in our kafka cluster we have only one broker so out topic has only one partition
+            and our consumer group have two consumers, now if you publish messages to the topic you will find only one
+            consumer is reading all the messages and another one is just sitting idle (until you terminate the first
+            consumer or restart that).
+            3.) Suppose a topic has 3 partitions and our consumer group has 2 consumers.So consumer1 is assigned
+            partition1 and partition2 and consumer2 is assigned partitions3.Now suppose you added one more consumer to
+            the consumer group.In that case reassignment of partitions will take place among all consumers, and now it
+            might be possible that consumer1 get partition1, consumer2 get partition2 and consumer3 get partition3. So
+            which consumer will get which consumer we can't know.
             ****************************************************************************************************
          */
 

@@ -42,6 +42,8 @@ public class ConsumerDemo {
         //But what if you want to subscribe multiple topics.You can do it as follows:
         //consumer.subscribe(Arrays.asList("first-topic", "second-topic", "third-topic"));
 
+
+
         // Poll for new data
         while (true){
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
